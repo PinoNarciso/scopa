@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Punteggio Scopa - Pino Narciso</title>
+    <title>Scopa Pro - Pino Narciso</title>
     
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com">
     <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com">
@@ -137,7 +137,7 @@
     let players = [], limit = 11, isGameOver = false, dealerIndex = -1;
 
     window.onload = () => {
-        const saved = localStorage.getItem('scopa_pino_v5');
+        const saved = localStorage.getItem('scopa_pino_final_v1');
         if (saved) {
             const data = JSON.parse(saved);
             players = data.players;
@@ -199,7 +199,17 @@
         });
 
         dealerIndex = (dealerIndex + 1) % players.length;
-        if (players.some(p => p.score >= limit)) isGameOver = true;
+        
+        // LOGICA DI FINE PARTITA:
+        // Vince chi supera il limite E ha punteggio maggiore degli altri.
+        // Se i punteggi massimi sono uguali, si continua.
+        const maxScore = Math.max(...players.map(p => p.score));
+        if (maxScore >= limit) {
+            const countWinners = players.filter(p => p.score === maxScore).length;
+            if (countWinners === 1) {
+                isGameOver = true;
+            }
+        }
         
         save();
         render();
@@ -233,8 +243,8 @@
                 </div>`;
             });
         } else {
-            header.innerText = "Partita Finita";
             const vincitore = [...players].sort((a,b) => b.score - a.score)[0];
+            header.innerText = "Partita Finita";
             inputArea.innerHTML = `<h2 style="text-align:center; color:var(--oro)">VINCE: ${vincitore.name} 🏆</h2>`;
         }
 
@@ -265,17 +275,17 @@
 
     function shareResults() {
         const classifica = [...players].sort((a,b) => b.score - a.score);
-        let testo = `🃏 *Classifica Scopa* 🃏\n\n`;
+        let testo = `🃏 *Risultati Scopa* 🃏\n\n`;
         classifica.forEach((p) => testo += `${p.name}: ${p.score} pt (Mani: ${[...p.playerHistory].reverse().join(' - ')})\n`);
         if (navigator.share) {
             navigator.share({ title: 'Risultati Scopa', text: testo }).catch(() => {});
         } else {
-            navigator.clipboard.writeText(testo).then(() => alert("Copiato!"));
+            navigator.clipboard.writeText(testo).then(() => alert("Copiato negli appunti!"));
         }
     }
 
-    function save() { localStorage.setItem('scopa_pino_v5', JSON.stringify({players, limit, isGameOver, dealerIndex})); }
-    function resetGame() { if(confirm("Vuoi iniziare una nuova partita? I dati attuali verranno persi.")) { localStorage.removeItem('scopa_pino_v5'); location.reload(); } }
+    function save() { localStorage.setItem('scopa_pino_final_v1', JSON.stringify({players, limit, isGameOver, dealerIndex})); }
+    function resetGame() { if(confirm("Vuoi iniziare una nuova partita? I dati attuali verranno persi.")) { localStorage.removeItem('scopa_pino_final_v1'); location.reload(); } }
 </script>
 </body>
 </html>
