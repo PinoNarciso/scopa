@@ -172,7 +172,7 @@
         const sumDiv = document.getElementById('sum-display');
         const confirmBtn = document.getElementById('confirm-btn');
         sumDiv.innerText = `Punti Mazzo: ${total} / 4`;
-        if (total === 4) {
+        if (total <= 4) {
             sumDiv.className = "sum-check sum-ok";
             confirmBtn.disabled = false;
             confirmBtn.classList.add('ready');
