@@ -231,7 +231,7 @@
 
         inputArea.innerHTML = '';
         if (!isGameOver) {
-            if (dealerIndex !== -1) header.innerHTML = `Mano di: <span style="color:var(--oro)">${players[dealerIndex].name} 🃏</span>`;
+            if (dealerIndex !== -1) header.innerHTML = `Mano di: <span style="color:var(--oro)">${players[dealerIndex].name}</span>`;
             players.forEach((p, index) => {
                 const isDealer = index === dealerIndex;
                 inputArea.innerHTML += `
